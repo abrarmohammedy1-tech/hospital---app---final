@@ -2,25 +2,26 @@ name: Build Debug APK
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          flutter-version: '3.7.0'
 
-      - run: flutter pub get
-      - run: flutter build apk --debug
+      - name: Install dependencies
+        run: flutter pub get
 
-      - name: Upload APK
-        - uses: actions/upload-artifact@v4
+      - name: Build debug APK
+        run: flutter build apk --debug
+
+      - name: Upload APK to release
+        uses: actions/upload-artifact@v3.1.2
         with:
-          name: app-debug
+          name: app-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
